@@ -1,0 +1,87 @@
+---
+/**
+ * StationLayout.astro - Layout wrapper for station pages
+ *
+ * Wraps MainLayout with station-specific defaults and auto-calculates
+ * prev/next navigation based on station number.
+ *
+ * Usage:
+ *   <StationLayout
+ *     stationNumber={1}
+ *     title="Your Station Title"
+ *     subtitle="Your subtitle"
+ *     description="Meta description for SEO"
+ *     avatarImage="cloudinary-url"
+ *     avatarAlt="HAP description"
+ *     introContent={introContentVariable}
+ *   >
+ *     <!-- Your station content here -->
+ *   </StationLayout>
+ */
+
+import MainLayout from './MainLayout.astro';
+
+interface Props {
+  stationNumber: number;
+  title: string;
+  subtitle: string;
+  description: string;
+  avatarImage: string;
+  avatarAlt: string;
+  introContent: string;
+  ogImage?: string;
+  nextStationTitle?: string;
+  footerReminder?: string;
+  labName?: string;
+}
+
+const {
+  stationNumber,
+  title,
+  subtitle,
+  description,
+  avatarImage,
+  avatarAlt,
+  introContent,
+  ogImage,
+  nextStationTitle,
+  footerReminder,
+  labName = "Your Learning Lab Topic"
+} = Astro.props;
+
+// Auto-calculate navigation based on station number
+const prevStation = stationNumber > 1
+  ? { url: `/stations/station${stationNumber - 1}/`, label: `Station ${stationNumber - 1}` }
+  : undefined;
+
+const nextStation = stationNumber < 6
+  ? {
+      url: `/stations/station${stationNumber + 1}/`,
+      label: nextStationTitle
+        ? `Station ${stationNumber + 1} - ${nextStationTitle}`
+        : `Station ${stationNumber + 1}`
+    }
+  : undefined;
+
+// Build page title with lab name
+const pageTitle = `${title} | HAP's Learning Lab: ${labName}`;
+const headerTitle = `Station ${stationNumber}: ${title}`;
+---
+
+<MainLayout
+  title={pageTitle}
+  description={description}
+  ogImage={ogImage}
+  headerTitle={headerTitle}
+  headerSubtitle={subtitle}
+  avatarImage={avatarImage}
+  avatarAlt={avatarAlt}
+  introContent={introContent}
+  showNavigation={true}
+  stationNumber={stationNumber}
+  prevStation={prevStation}
+  nextStation={nextStation}
+  footerReminder={footerReminder}
+>
+  <slot />
+</MainLayout>
