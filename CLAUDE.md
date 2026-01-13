@@ -1,54 +1,85 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with HAP Learning Lab content.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project overview
 
 **HAP's Learning Lab** - An Astro-based static site template for creating 6-station educational experiences. HAP (HyBit A. ProtoBot) is Prof. Teeters' apprentice who guides students through hands-on learning with his friendly first-person narrative.
 
+This repository contains both the main project AND a `starter-template/` folder that serves as a distributable template for new labs.
+
 ## Commands
 
 ```bash
-# Development
 npm run dev        # Start dev server at localhost:4321
-npm run build      # Production build
+npm run build      # Production build to dist/
 npm run preview    # Preview production build
 ```
 
-## Creating content
+## Architecture
 
-### Workflow
+### Layout system
 
-1. Read `docs/designing-labs/hap-narrative-and-scene-design.md`
-2. Fill out `docs/reference-cards/station-blueprint-template.md` for each station
-3. Copy templates from `src/templates/` to `src/pages/`
-4. Replace all `[PLACEHOLDER_*]` markers
-5. Validate with Claude Skills in `.claude/skills/`
+```text
+src/layouts/
+├── MainLayout.astro     # Base layout with header, footer, navigation
+└── StationLayout.astro  # Wraps MainLayout with station-specific props
+                         # Auto-calculates prev/next navigation from stationNumber
+```
 
-### Key files
+Station pages pass a `stationNumber` prop (1-6) to `StationLayout`, which handles navigation links automatically.
 
-| Template | Copy to |
+### Component hierarchy
+
+```text
+StationLayout (stationNumber, title, subtitle, introContent, ...)
+    └── MainLayout (pageTitle, navigation, footer)
+        ├── Header.astro (avatar, titles)
+        ├── Navigation.astro (station dots, prev/next)
+        ├── <slot /> (station content)
+        └── Footer.astro (copyright, reminder)
+```
+
+### Syntax highlighting
+
+Uses Astro's built-in Shiki with `css-variables` theme, customized in `src/styles/shiki-hap-theme.css`. The `CodeBlock.astro` component wraps Astro's `<Code>` component.
+
+Supported languages: html, css, javascript, json, markdown, bash, text, nunjucks
+
+## Content creation workflow
+
+1. Complete `docs/reference-cards/station-blueprint-template.md` for each station
+2. Copy `src/templates/station-template.astro` to `src/pages/stations/station[N].astro`
+3. Replace all `[PLACEHOLDER_*]` markers with content
+4. Use `station6-template.astro` for the final station (different structure)
+5. Validate with skills in `skills/` before committing
+6. Run `npm run build` to verify
+
+### Template files
+
+| Template | Purpose |
 |----------|---------|
-| `src/templates/hub-template.astro` | `src/pages/index.astro` |
-| `src/templates/station-template.astro` | `src/pages/stations/station[1-6].astro` |
+| `src/templates/hub-template.astro` | Landing page → `src/pages/index.astro` |
+| `src/templates/station-template.astro` | Stations 1-5 |
+| `src/templates/station6-template.astro` | Final station (different layout) |
 
-## HAP's voice rules
+## HAP's voice (critical)
 
-**Critical**: HAP always speaks in first-person apprentice voice.
+HAP always speaks in **first-person apprentice voice**. This is non-negotiable.
 
-### Do
+### Required patterns
 
 - "I learned from Prof. Teeters that..."
 - "When I was practicing..."
 - "This was tricky for me too..."
 - Share specific mistakes and what they taught
 
-### Don't
+### Forbidden patterns
 
 - "You should..." (too instructional)
-- "Obviously, the answer is..." (not humble)
-- "Just" or "simply" (dismissive)
-- Generic statements without attribution
+- "Obviously..." or "It's simple..." (dismissive)
+- "Just" or "simply" (minimizing)
+- Generic statements without attribution to Prof. Teeters
 
 See `docs/reference-cards/hap-voice-card.md` for complete guidelines.
 
@@ -56,67 +87,59 @@ See `docs/reference-cards/hap-voice-card.md` for complete guidelines.
 
 | Character | Role | Voice |
 |-----------|------|-------|
-| HAP | Narrator | First-person, curious, humble |
-| Prof. Teeters | Mentor | Calm, encouraging, uses analogies |
-| Grace Hopper | Assistant | Precise, technical, occasionally stern |
-
-See `docs/reference-cards/character-quick-ref.md` for details.
-
-## Code blocks
-
-Use the CodeBlock component for syntax highlighting:
-
-```astro
----
-import CodeBlock from '../../components/CodeBlock.astro';
----
-
-<CodeBlock code={`your code here`} lang="css" />
-```
-
-Supported languages: html, css, javascript, json, markdown, bash, text, nunjucks
+| HAP | Narrator | First-person, curious, humble, uses 🟠 emoji |
+| Prof. Teeters | Mentor | Calm, encouraging, uses analogies (max 1 appearance per station) |
+| Grace Hopper | Assistant | Precise, no contractions, no emojis (only when precision matters) |
 
 ## CSS requirements
 
-**All colors must use HSL format**:
+**All colors must use HSL format** - never hex or rgb:
 
 ```css
 /* Correct */
 --warm-orange: hsl(32, 76%, 63%);
 
-/* Wrong - never use */
+/* Wrong */
 --warm-orange: #E8A557;
 ```
 
+Use "CSS custom property" terminology, never "CSS variable".
+
 ## HAP images
 
-Always use images from the verified inventory:
-`.claude/skills/hap-image-validation/hap-cloudinary-complete-inventory.md`
+**Never guess image filenames.** Always verify against:
+`skills/hap-image-validation/hap-cloudinary-complete-inventory.md`
 
-Common images:
+Common poses:
 
-- `HAP-learner_dvehmt` - Default learner
-- `hap-laptop_xiewar` - At computer
-- `hap-waving_dgzacg` - Greeting
-- `hap-broke-things_qtbum4` - Confession
-- `hap-brain-explodes_wu0or8` - Mind blown
-- `hap-celebrating_bljvgl` - Success
+| Filename | Use case |
+|----------|----------|
+| `HAP-learner_dvehmt` | Default, footer |
+| `hap-laptop_xiewar` | Hero, studying |
+| `hap-waving_dgzacg` | Greeting |
+| `hap-broke-things_qtbum4` | Confession callouts |
+| `hap-brain-explodes_wu0or8` | Breakthroughs (use sparingly!) |
+| `hap-celebrating_bljvgl` | Major victories |
 
-**Never guess image filenames** - always check the inventory.
+Cloudinary URL format:
 
-## Claude Skills
+```text
+https://res.cloudinary.com/cynthia-teeters/image/upload/f_auto,q_auto,w_[WIDTH],c_limit/v[VERSION]/[FILENAME].jpg
+```
 
-Use these skills for validation:
+## Skills for validation
 
-| Skill | When to use |
-|-------|-------------|
-| `hap-voice` | Validate HAP's personality |
-| `accessibility-check` | WCAG 2.2 Level AA |
-| `css-standards` | HSL color format |
-| `station-content` | Station structure |
-| `hap-image-validation` | Image selection |
+Located in `skills/` directory (run with `/format skillname`):
 
-## Heading case
+| Skill | Purpose |
+|-------|---------|
+| `hap-voice` | Validate first-person apprentice voice |
+| `accessibility-check` | WCAG 2.2 Level AA compliance |
+| `css-standards` | HSL color format enforcement |
+| `station-content` | Station structure patterns |
+| `hap-image-validation` | Verify image filenames exist |
+
+## Heading case conventions
 
 - **HTML files**: Title Case ("What You'll Learn")
 - **Markdown files**: Sentence case ("What you'll learn")
@@ -124,12 +147,12 @@ Use these skills for validation:
 ## Emoji usage
 
 - 🟠 HAP's signature (tips, insights)
-- 🔬 Science, research
+- 🔬 Science, research discoveries
 - 😳 After Grace corrects HAP
 
-**Rules**: Never in code blocks, never as decoration, max 2-3 per station.
+Rules: Never in code blocks, never as decoration, max 2-3 per station.
 
-## Copyright
+## Copyright notice
 
 All HTML files must include:
 
@@ -142,12 +165,18 @@ HyBit A. ProtoBot (HAP) character and the apprentice learning methodology are pr
 
 ## Common pitfalls
 
-1. **Don't copy from completed stations** - Always use templates
-2. **Don't hallucinate HAP images** - Check the inventory
+1. **Don't copy from completed stations** - Always use templates from `src/templates/`
+2. **Don't hallucinate HAP images** - Check the inventory file
 3. **Don't use hex/rgb colors** - Use hsl() only
 4. **Don't break HAP's voice** - First-person, humble, references mentor
-5. **Don't skip validation** - Use Claude Skills before committing
+5. **Don't overuse breakthrough images** - `hap-brain-explodes` max once per station
+6. **Don't skip validation** - Run skills before committing
 
----
+## Key documentation
 
-*Full documentation: `docs/designing-labs/hap-narrative-and-scene-design.md`*
+| Document | Purpose |
+|----------|---------|
+| `docs/designing-labs/hap-narrative-and-scene-design.md` | Complete narrative framework |
+| `docs/reference-cards/hap-voice-card.md` | HAP voice quick reference |
+| `docs/reference-cards/station-blueprint-template.md` | Pre-writing checklist |
+| `docs/reference-cards/character-quick-ref.md` | All three characters |
