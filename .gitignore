@@ -29,3 +29,6 @@ yarn-error.log*
 
 # Optional: Lighthouse reports
 lighthouse-reports/
+
+reports/
+.specstory/
