@@ -2,8 +2,7 @@
 /**
  * CodeBlock.astro - Wrapper for Astro's Code component with HAP theme
  *
- * Uses css-variables theme for HAP custom styling via shiki-hap-theme.css
- * Includes copy button functionality
+ * Uses min-light theme with copy button functionality
  *
  * Usage:
  *   <CodeBlock code={`your code here`} lang="css" />
@@ -12,10 +11,11 @@
  */
 
 import { Code } from 'astro:components';
+import type { BuiltinLanguage } from 'shiki';
 
 interface Props {
   code: string;
-  lang: string;
+  lang: BuiltinLanguage;
 }
 
 const { code, lang } = Astro.props;
