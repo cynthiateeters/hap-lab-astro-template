@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **HAP's Learning Lab** - An Astro-based static site template for creating 6-station educational experiences. HAP (HyBit A. ProtoBot) is Prof. Teeters' apprentice who guides students through hands-on learning with his friendly first-person narrative.
 
-This repository contains both the main project AND a `starter-template/` folder that serves as a distributable template for new labs.
+To create a new lab, copy this entire repository to a new directory and customize.
 
 ## Commands
 
@@ -57,11 +57,11 @@ Supported languages: html, css, javascript, json, markdown, bash, text, nunjucks
 
 ### Template files
 
-| Template | Purpose |
-|----------|---------|
-| `src/templates/hub-template.astro` | Landing page → `src/pages/index.astro` |
-| `src/templates/station-template.astro` | Stations 1-5 |
-| `src/templates/station6-template.astro` | Final station (different layout) |
+| Template                                | Purpose                                |
+| --------------------------------------- | -------------------------------------- |
+| `src/templates/hub-template.astro`      | Landing page → `src/pages/index.astro` |
+| `src/templates/station-template.astro`  | Stations 1-5                           |
+| `src/templates/station6-template.astro` | Final station (different layout)       |
 
 ## HAP's voice (critical)
 
@@ -85,11 +85,11 @@ See `docs/reference-cards/hap-voice-card.md` for complete guidelines.
 
 ## Characters
 
-| Character | Role | Voice |
-|-----------|------|-------|
-| HAP | Narrator | First-person, curious, humble, uses 🟠 emoji |
-| Prof. Teeters | Mentor | Calm, encouraging, uses analogies (max 1 appearance per station) |
-| Grace Hopper | Assistant | Precise, no contractions, no emojis (only when precision matters) |
+| Character     | Role      | Voice                                                             |
+| ------------- | --------- | ----------------------------------------------------------------- |
+| HAP           | Narrator  | First-person, curious, humble, uses 🟠 emoji                      |
+| Prof. Teeters | Mentor    | Calm, encouraging, uses analogies (max 1 appearance per station)  |
+| Grace Hopper  | Assistant | Precise, no contractions, no emojis (only when precision matters) |
 
 ## CSS requirements
 
@@ -100,7 +100,7 @@ See `docs/reference-cards/hap-voice-card.md` for complete guidelines.
 --warm-orange: hsl(32, 76%, 63%);
 
 /* Wrong */
---warm-orange: #E8A557;
+--warm-orange: #e8a557;
 ```
 
 Use "CSS custom property" terminology, never "CSS variable".
@@ -112,14 +112,14 @@ Use "CSS custom property" terminology, never "CSS variable".
 
 Common poses:
 
-| Filename | Use case |
-|----------|----------|
-| `HAP-learner_dvehmt` | Default, footer |
-| `hap-laptop_xiewar` | Hero, studying |
-| `hap-waving_dgzacg` | Greeting |
-| `hap-broke-things_qtbum4` | Confession callouts |
+| Filename                    | Use case                       |
+| --------------------------- | ------------------------------ |
+| `HAP-learner_dvehmt`        | Default, footer                |
+| `hap-laptop_xiewar`         | Hero, studying                 |
+| `hap-waving_dgzacg`         | Greeting                       |
+| `hap-broke-things_qtbum4`   | Confession callouts            |
 | `hap-brain-explodes_wu0or8` | Breakthroughs (use sparingly!) |
-| `hap-celebrating_bljvgl` | Major victories |
+| `hap-celebrating_bljvgl`    | Major victories                |
 
 Cloudinary URL format:
 
@@ -131,13 +131,13 @@ https://res.cloudinary.com/cynthia-teeters/image/upload/f_auto,q_auto,w_[WIDTH],
 
 Located in `skills/` directory (run with `/format skillname`):
 
-| Skill | Purpose |
-|-------|---------|
-| `hap-voice` | Validate first-person apprentice voice |
-| `accessibility-check` | WCAG 2.2 Level AA compliance |
-| `css-standards` | HSL color format enforcement |
-| `station-content` | Station structure patterns |
-| `hap-image-validation` | Verify image filenames exist |
+| Skill                  | Purpose                                |
+| ---------------------- | -------------------------------------- |
+| `hap-voice`            | Validate first-person apprentice voice |
+| `accessibility-check`  | WCAG 2.2 Level AA compliance           |
+| `css-standards`        | HSL color format enforcement           |
+| `station-content`      | Station structure patterns             |
+| `hap-image-validation` | Verify image filenames exist           |
 
 ## Heading case conventions
 
@@ -174,9 +174,9 @@ HyBit A. ProtoBot (HAP) character and the apprentice learning methodology are pr
 
 ## Key documentation
 
-| Document | Purpose |
-|----------|---------|
+| Document                                                | Purpose                      |
+| ------------------------------------------------------- | ---------------------------- |
 | `docs/designing-labs/hap-narrative-and-scene-design.md` | Complete narrative framework |
-| `docs/reference-cards/hap-voice-card.md` | HAP voice quick reference |
-| `docs/reference-cards/station-blueprint-template.md` | Pre-writing checklist |
-| `docs/reference-cards/character-quick-ref.md` | All three characters |
+| `docs/reference-cards/hap-voice-card.md`                | HAP voice quick reference    |
+| `docs/reference-cards/station-blueprint-template.md`    | Pre-writing checklist        |
+| `docs/reference-cards/character-quick-ref.md`           | All three characters         |
